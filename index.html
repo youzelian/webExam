@@ -64,8 +64,20 @@
         div#audioStage p:hover {
             background-color: lightblue;
         }
+
+        #person {
+            display: inline-block;
+            width: 200px;
+            margin: 25px;
+        }
+
+        img {
+            width: 200px;
+        }
     </style>
     <script src="ks.js">
+    </script>
+    <script src="list.js">
     </script>
 </head>
 
@@ -76,7 +88,6 @@
         <video id="video"></video>
         <audio id="audio"></audio>
     </div>
-    <div id="audioStage"></div>
     <div id="UI">
         <input type="button" value="pre" id="pre">
         <input type="button" value="play" id="play">
@@ -162,19 +173,31 @@
     };
     // 动态创建音频菜单
     Model.createAudioMenu = function () {
-        let div = document.createElement("div");
-        div.id = "head";
-        div.innerHTML = "这是我们第一组的项目";
-        headDom = document.getElementById("head");
-        for (let i = 0; i < 4; i++) {
-            let img = document.createElement("img");
-            img.id = "img" + i;
-            img.src = "";
+        let divD1 = document.createElement("div");
+        divD1.id = "head";
+        let h1D = document.createElement("h1");
+        h1D.textContent = "第一小组";
+        divD1.appendChild(h1D);
+        for (let i = 0; i < 5; i++) {
+            let divD2 = document.createElement("div");
+            let imgD = document.createElement("img");
+            let spanD = document.createElement("span");
+            divD2.id = "person";
+            imgD.id = "img";
+            imgD.src = "images/" + i + ".jpg";
+            spanD.textContent = persons[i];
+            divD2.appendChild(imgD);
+            divD2.appendChild(spanD);
+            divD1.appendChild(divD2);
         }
-        Model.UI.stageDom.appendChild(div);
+        Model.UI.stageDom.appendChild(divD1);
+        let divD3 = document.createElement("div");
+        divD3.id = "audioStage";
         for (let i = 0; i < 6; i++) {
-            Model.UI.audioStageDom.innerHTML += '<p onclick="playMedia(' + mediaData.audioFiles[0].time[i][0] + ',' + mediaData.audioFiles[0].time[i][1] + ')">' + mediaData.audioFiles[0].titles[i] + '</p>';
+            divD3.innerHTML += '<p onclick="playMedia(' + mediaData.audioFiles[0].time[i][0] + ',' + mediaData.audioFiles[0].time[i][1] + ')">' + mediaData.audioFiles[0].titles[i] + '</p>';
         }
+        Model.UI.stageDom.appendChild(divD3);
+
     };
 
     /*****音频时间开始和结束函数*****/
@@ -201,13 +224,14 @@
 
     // 删除音频菜单
     Model.removeAudioMenu = function () {
-        let pDom;
-        pDom = document.querySelectorAll("div#stage p");
-        if (pDom.length != 0) {
-            for (let i = 0; i < 6; i++) {
-                Model.UI.stageDom.removeChild(pDom[i]);
-            }
-        }
+        let headD;
+        let audioStageD;
+
+        headD = document.querySelector("#head");
+        audioStageD = document.querySelector("#audioStage");
+        headD.remove();
+        audioStageD.remove();
+        // Model.UI.stageDom.style.height = Model.UI.audioDom.clientHeight + 'px';
     };
 
     //同步代码结束
@@ -244,11 +268,13 @@
                 i--;
             }
             // 判断如果不是第一个音频文件则删除，是则添加
+            audioStageD = document.querySelector("#audioStage");
+            headD = document.querySelector("#head");
             if (!Model.isVideo) {
-                if (i != 0)
-                    Model.removeAudioMenu();
-                else
+                if (i == 0)
                     Model.createAudioMenu();
+                else if (i != 0 && headD != null && audioStageD != null)
+                    Model.removeAudioMenu();
             }
             // 2.4 — — — —每次切换视频需要更新目录内容
             Model.showMediaNum(i);
@@ -294,14 +320,16 @@
             else {
                 i++;
             }
-            // // 判断如果不是第一个音频文件则删除，是则添加
+            // 判断如果不是第一个音频文件则删除，是则添加 
+            audioStageD = document.querySelector("#audioStage");
+            headD = document.querySelector("#head");
             if (!Model.isVideo) {
-                if (i != 0)
-                    Model.removeAudioMenu();
-                else
+                if (i == 0)
                     Model.createAudioMenu();
+                else if (i != 0 && headD != null && audioStageD != null)
+                    Model.removeAudioMenu();
             }
-            // 2.4 — — — —每次切换视频需要更新目录内容
+            // 每次切换视频需要更新目录内容
             Model.showMediaNum(i);
             Model.i = i;
             file.src = file.getURL();

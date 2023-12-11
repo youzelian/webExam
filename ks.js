@@ -1,7 +1,7 @@
 var mediaData = {
   audioPath: "d:/media/mp3Files/",
   audioFiles: [
-    { fileName: "LinuxCMD-0.mp3", titles: ["preface", "thanks", "history", "preface", "thanks", "history"], time: [[5, 10], [20, 25], [503, 900], [503, 900], [503, 900], [503, 900]] }
+    { fileName: "LinuxCMD-0.mp3", titles: ["Introduction", "Why Use the Command Line?", "What This Book Is About?", "Who Should Read This Book", "What’s in This Book?", "How to Read This Book", "Install Linux"], time: [[0, 805], [805, 1393], [1393, 1923], [1923, 2539], [2539, 3158], [3158, 3625], [3625, 3992]] }
     , { fileName: "LinuxCMD-1.mp3" }
     , { fileName: "LinuxCMD-2.mp3" }
     , { fileName: "cs1.mp3" }
