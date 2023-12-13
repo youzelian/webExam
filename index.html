@@ -5,76 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            text-align: center;
-        }
-
-        input {
-            font-size: 1.5em;
-            margin-left: 1em;
-            cursor: pointer;
-        }
-
-        input#switch {
-            background-color: rgb(30, 60, 0);
-            color: rgb(100, 200, 50);
-        }
-
-        #currentTime {
-            padding: 10px 5px;
-            background-color: red;
-            color: aliceblue;
-            font-size: 2em;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        #logo {
-            padding: 10px 5px;
-            background-color: green;
-            color: aliceblue;
-            font-size: 2em;
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-
-        div#UI {
-            position: relative;
-            top: 6em;
-        }
-
-        div#audioStage p {
-            background-color: pink;
-            color: white;
-            padding: 1px 3px;
-            margin-top: 10px;
-            font-size: 1.5em;
-            cursor: pointer;
-        }
-
-        div#audioStage p:hover {
-            background-color: lightblue;
-        }
-
-        #person {
-            display: inline-block;
-            width: 200px;
-            margin: 25px;
-        }
-
-        img {
-            width: 200px;
-        }
-    </style>
+    <title>KS</title>
+    <link rel="stylesheet" href="index.css">
     <script src="ks.js">
     </script>
     <script src="list.js">
@@ -82,12 +14,17 @@
 </head>
 
 <body>
-    <div id="currentTime"></div>
-    <div id="logo"></div>
+    <div id="header">
+        <h1>视频音频播放系统</h1>
+    </div>
+
     <div id="stage">
+        <div id="currentTime"></div>
+        <div id="logo"></div>
         <video id="video"></video>
         <audio id="audio"></audio>
     </div>
+
     <div id="UI">
         <input type="button" value="pre" id="pre">
         <input type="button" value="play" id="play">
@@ -106,6 +43,7 @@
 
     Model.UI = {};
     Model.UI.stageDom = document.getElementById("stage");
+    Model.UI.headerDom = document.getElementById("header");
     Model.UI.audioStageDom = document.getElementById("audioStage");
     Model.UI.videoDom = document.getElementById("video");
     Model.UI.audioDom = document.getElementById("audio");
@@ -128,17 +66,19 @@
     }
     /*****定义全局变量*****/
 
-    // 第七次作业更新任务1— — — —全屏播放视频
+    // 全屏播放视频
     // 1.1定义windowsWidth,将文档浏览器的宽度赋值给它
-    Model.windowsWidth = document.body.clientWidth;
+    Model.windowsWidth = document.body.clientWidth - 15;
+    // Model.windowsWidth = window.innerWidth;
+    // Model.windowsWidth = document.documentElement.clientWidth;
     // 1.2再将windowsWidth赋值给视频的宽度，达成全屏播放视频的效果
     Model.UI.stageDom.style.width = Model.windowsWidth + 'px';
     Model.UI.videoDom.style.width = Model.windowsWidth + 'px';
     Model.UI.audioDom.style.width = Model.windowsWidth + 'px';
-    Model.UI.stageDom.style.height = Model.UI.videoDom.clientHeight + 'px';
+    // Model.UI.stageDom.style.height = Model.UI.videoDom.clientHeight + + Model.UI.headerDom.clientHeight + 'px';
 
-    // 第七次作业更新任务2— — — —logo设置
-    // 2.2 修改logo内容
+    // logo设置
+    // 1.修改logo内容
     Model.showMediaNum = function (i) {
         let length = null;
         if (Model.isVideo) {
@@ -148,7 +88,7 @@
         }
         Model.UI.logoDom.textContent = "NO." + (i + 1) + "/" + length;
     }
-    // 2.3初始化 Model.i=0
+    // 2.初始化 Model.i=0
     Model.showMediaNum(0);
 
     // 展示时间进度条
@@ -164,40 +104,42 @@
     // 切换媒体类型的函数
     Model.switchMediaDom = function () {
         if (Model.isVideo) {
+            // Model.UI.stageDom.style.height = Model.UI.audioDom.clientHeight + 'px';
             Model.UI.stageDom.removeChild(Model.UI.videoDom);
             Model.UI.stageDom.appendChild(Model.UI.audioDom);
         } else {
-            Model.UI.stageDom.removeChild(Model.UI.stageDom.firstElementChild);
+            Model.UI.stageDom.removeChild(Model.UI.audioDom);
             Model.UI.stageDom.appendChild(Model.UI.videoDom);
         }
     };
     // 动态创建音频菜单
     Model.createAudioMenu = function () {
-        let divD1 = document.createElement("div");
-        divD1.id = "head";
-        let h1D = document.createElement("h1");
-        h1D.textContent = "第一小组";
-        divD1.appendChild(h1D);
-        for (let i = 0; i < 5; i++) {
-            let divD2 = document.createElement("div");
+        // 动态创建header
+        for (let i = 0; i < 6; i++) {
+            let divD1 = document.createElement("div");
             let imgD = document.createElement("img");
             let spanD = document.createElement("span");
-            divD2.id = "person";
-            imgD.id = "img";
-            imgD.src = "images/" + i + ".jpg";
-            spanD.textContent = persons[i];
-            divD2.appendChild(imgD);
-            divD2.appendChild(spanD);
-            divD1.appendChild(divD2);
+            divD1.className = "person";
+            imgD.className = "img";
+            imgD.src = mediaData.authors.picUrl[i];
+            spanD.textContent = mediaData.authors.names[i];
+            divD1.appendChild(imgD);
+            divD1.appendChild(spanD);
+            document.getElementById("header").appendChild(divD1);
         }
-        Model.UI.stageDom.appendChild(divD1);
-        let divD3 = document.createElement("div");
-        divD3.id = "audioStage";
+        // 动态创建目录
+        let divD2 = document.createElement("div");
+        divD2.id = "audioStage";
         for (let i = 0; i < 6; i++) {
-            divD3.innerHTML += '<p onclick="playMedia(' + mediaData.audioFiles[0].time[i][0] + ',' + mediaData.audioFiles[0].time[i][1] + ')">' + mediaData.audioFiles[0].titles[i] + '</p>';
+            divD2.innerHTML += '<p onclick="playMedia(' + mediaData.audioFiles[0].time[i][0] + ',' + mediaData.audioFiles[0].time[i][1] + ')">' + mediaData.audioFiles[0].titles[i] + '</p>';
         }
-        Model.UI.stageDom.appendChild(divD3);
-
+        Model.UI.stageDom.appendChild(divD2);
+        // 动态创建footer
+        // 学校、班级、小组成员（排序很重要）的名字。
+        let footerD = document.createElement("footer");
+        footerD.textContent = "江西科技师范大学软件动漫学院21计算机科学与技术2班;小组成员:余泽亮、刘可汉、刘强、徐韬飞、张子然";
+        footerD.id = "footer";
+        document.body.appendChild(footerD);
     };
 
     /*****音频时间开始和结束函数*****/
@@ -224,14 +166,17 @@
 
     // 删除音频菜单
     Model.removeAudioMenu = function () {
-        let headD;
+        let headPersonD;
         let audioStageD;
-
-        headD = document.querySelector("#head");
+        let footerD;
+        headPersonD = document.querySelectorAll("#header .person");
         audioStageD = document.querySelector("#audioStage");
-        headD.remove();
+        footerD = document.querySelector("#footer");
+        for (var i = 0; i < headPersonD.length; i++) {
+            headPersonD[i].remove();
+        }
         audioStageD.remove();
-        // Model.UI.stageDom.style.height = Model.UI.audioDom.clientHeight + 'px';
+        footerD.remove();
     };
 
     //同步代码结束
@@ -268,12 +213,13 @@
                 i--;
             }
             // 判断如果不是第一个音频文件则删除，是则添加
+            headPersonD = document.querySelectorAll("#header .person");
             audioStageD = document.querySelector("#audioStage");
-            headD = document.querySelector("#head");
+            footerD = document.querySelector("#footer");
             if (!Model.isVideo) {
                 if (i == 0)
                     Model.createAudioMenu();
-                else if (i != 0 && headD != null && audioStageD != null)
+                else if (i != 0 && headPersonD != null && audioStageD != null && footerD != null)
                     Model.removeAudioMenu();
             }
             // 2.4 — — — —每次切换视频需要更新目录内容
@@ -321,13 +267,16 @@
                 i++;
             }
             // 判断如果不是第一个音频文件则删除，是则添加 
+            headPersonD = document.querySelectorAll("#header .person");
             audioStageD = document.querySelector("#audioStage");
-            headD = document.querySelector("#head");
+            footerD = document.querySelector("#footer");
             if (!Model.isVideo) {
-                if (i == 0)
+                if (i == 0) {
                     Model.createAudioMenu();
-                else if (i != 0 && headD != null && audioStageD != null)
+                }
+                else if (i != 0 && headPersonD != null && audioStageD != null && footerD != null) {
                     Model.removeAudioMenu();
+                }
             }
             // 每次切换视频需要更新目录内容
             Model.showMediaNum(i);
