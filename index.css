@@ -108,7 +108,8 @@ div#header {
 }
 
 .img {
-    width: 200px;
+    /* width: 200px; */
+    width: 12em;
 }
 
 .person span {
